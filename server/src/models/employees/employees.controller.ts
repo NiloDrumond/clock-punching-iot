@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateEmployeeDTO } from './dto/create-employee.dto';
 import { Employee } from './employees.interfaces';
 import { EmployeesService } from './employees.service';
@@ -10,6 +10,11 @@ export class EmployeesController {
   @Post()
   create(@Body() createEmployeeDTO: CreateEmployeeDTO) {
     this.employeesService.create(createEmployeeDTO);
+  }
+
+  @Post('clockin/:cpf')
+  clockIn(@Param('cpf') cpf: string) {
+    this.employeesService.clockIn(cpf);
   }
 
   @Get()

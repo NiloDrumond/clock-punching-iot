@@ -1,7 +1,6 @@
-export type EmployeeRole = "manager" | "worker";
-
 export interface Employee {
-  id: string;
+  cpf: string;
   name: string;
-  role: EmployeeRole;
+  atOffice: boolean;
+  timestamps: Date[];
 }

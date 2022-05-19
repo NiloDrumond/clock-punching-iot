@@ -1,23 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateEmployeeDTO } from './dto/create-employee.dto';
 import { Employee } from './employees.interfaces';
-import { v4 } from 'uuid';
 
 @Injectable()
 export class EmployeesService {
-  private readonly employees: Employee[] = [];
+  private readonly employees: Record<string, Employee> = {};
 
-  create({ name }: CreateEmployeeDTO) {
+  create({ name, cpf }: CreateEmployeeDTO) {
     const employee: Employee = {
-      id: v4(),
+      cpf,
       atOffice: false,
       timestamps: [],
       name,
     };
-    this.employees.push(employee);
+    this.employees[cpf] = employee;
+  }
+
+  clockIn(cpf: string) {
+    if (!this.employees[cpf]) {
+      throw new HttpException('Empregado não encontrado', HttpStatus.NOT_FOUND);
+    }
+    this.employees[cpf].atOffice = !this.employees[cpf].atOffice;
+    this.employees[cpf].timestamps.push(new Date());
   }
 
   findAll(): Employee[] {
-    return this.employees;
+    return Object.values(this.employees);
   }
 }

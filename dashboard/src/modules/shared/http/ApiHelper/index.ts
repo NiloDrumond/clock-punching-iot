@@ -59,11 +59,12 @@ class AxiosHelper implements IApiHelper {
     const url = params.url.includes("http")
       ? params.url
       : `${this.baseUrl}/${params.url}`;
-
+    console.log(url)
     const response = await this.instance.get(
       url,
       this.prepareConfig(params.timeout)
     );
+    console.log(response);
     return {
       body: response.data,
       statusCode: response.status,

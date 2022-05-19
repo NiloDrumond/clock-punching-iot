@@ -1,5 +1,5 @@
 export interface Employee {
-  id: string;
+  cpf: string;
   name: string;
   atOffice: boolean;
   timestamps: Date[];

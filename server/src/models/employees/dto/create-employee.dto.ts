@@ -1,9 +1,14 @@
-import { IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateEmployeeDTO {
   @IsNotEmpty()
   @IsString()
   name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Length(11, 11)
+  cpf: string;
 
   // @IsNotEmpty()
   // @IsString()
