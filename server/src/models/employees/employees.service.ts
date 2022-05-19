@@ -1,3 +1,4 @@
+import { sendMessage } from '@/services/aws';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateEmployeeDTO } from './dto/create-employee.dto';
 import { Employee } from './employees.interfaces';
@@ -19,6 +20,18 @@ export class EmployeesService {
   clockIn(cpf: string) {
     if (!this.employees[cpf]) {
       throw new HttpException('Empregado não encontrado', HttpStatus.NOT_FOUND);
+    }
+    const employee = this.employees[cpf];
+    if (employee.atOffice) {
+      const entered = employee.timestamps[employee.timestamps.length - 1];
+      console.log(new Date().getTime() - entered.getTime());
+      console.log(8 * 60 * 60 * 1000);
+      if (new Date().getTime() - entered.getTime() < 8 * 60 * 60 * 1000) {
+        sendMessage({
+          topic: 'warning',
+          message: 'Teste',
+        });
+      }
     }
     this.employees[cpf].atOffice = !this.employees[cpf].atOffice;
     this.employees[cpf].timestamps.push(new Date());
