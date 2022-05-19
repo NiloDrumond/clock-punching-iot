@@ -8,8 +8,8 @@ type MessageDTO = {
 function buildConnection() {
   const config_builder =
     iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
-      './1b966a6802524e52d3d1518a4083bbda6a5b0b905830df3875f2fef29de2bb08-certificate.pem.crt',
-      './1b966a6802524e52d3d1518a4083bbda6a5b0b905830df3875f2fef29de2bb08-private.pem.key',
+      './certs/1b966a6802524e52d3d1518a4083bbda6a5b0b905830df3875f2fef29de2bb08-certificate.pem.crt',
+      './certs/1b966a6802524e52d3d1518a4083bbda6a5b0b905830df3875f2fef29de2bb08-private.pem.key',
     );
 
   // iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
@@ -19,7 +19,7 @@ function buildConnection() {
 
   config_builder.with_certificate_authority_from_path(
     undefined,
-    './AmazonRootCA1.pem',
+    './certs/AmazonRootCA1.pem',
   );
 
   config_builder.with_clean_session(false);
