@@ -29,7 +29,16 @@ function buildConnection() {
   const config = config_builder.build();
 
   const client = new mqtt.MqttClient();
-  return client.new_connection(config);
+  const connection = client.new_connection(config);
+  connection.on('error', (error) => {
+    console.error(error);
+  });
+  try {
+    connection.connect();
+  } catch (err) {
+    console.error('Caught', err);
+  }
+  return connection;
 }
 
 let connection: mqtt.MqttClientConnection;
@@ -43,7 +52,7 @@ try {
 async function sendMessage({ message, topic }: MessageDTO) {
   return new Promise<void>(async (resolve, reject) => {
     try {
-      function publish() {
+      async function publish() {
         connection
           .publish(topic, JSON.stringify(message), mqtt.QoS.AtLeastOnce)
           .then(() => {
