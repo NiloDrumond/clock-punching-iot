@@ -1,8 +1,8 @@
-import { auth, iot, mqtt } from 'aws-iot-device-sdk-v2';
+import { iot, mqtt } from 'aws-iot-device-sdk-v2';
 
 type MessageDTO = {
   topic: string;
-  message: string;
+  message: Record<string, string>;
 };
 
 function buildConnection() {
@@ -11,11 +11,6 @@ function buildConnection() {
       'certs/1b966a6802524e52d3d1518a4083bbda6a5b0b905830df3875f2fef29de2bb08-certificate.pem.crt',
       'certs/1b966a6802524e52d3d1518a4083bbda6a5b0b905830df3875f2fef29de2bb08-private.pem.key',
     );
-
-  // iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
-  //   region: 'us-east-1',
-  //   credentials_provider: auth.AwsCredentialsProvider.newDefault(),
-  // });
 
   config_builder.with_certificate_authority_from_path(
     undefined,
@@ -41,13 +36,7 @@ function buildConnection() {
   return connection;
 }
 
-let connection: mqtt.MqttClientConnection;
-
-try {
-  connection = buildConnection();
-} catch (e) {
-  console.log(e);
-}
+const connection = buildConnection();
 
 async function sendMessage({ message, topic }: MessageDTO) {
   return new Promise<void>(async (resolve, reject) => {

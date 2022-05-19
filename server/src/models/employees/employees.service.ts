@@ -29,7 +29,9 @@ export class EmployeesService {
       if (new Date().getTime() - entered.getTime() < 8 * 60 * 60 * 1000) {
         sendMessage({
           topic: 'warning',
-          message: 'Teste',
+          message: {
+            message: `${employee.name} trabalhou menos que 8 horas.`,
+          },
         });
       }
     }
