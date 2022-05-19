@@ -21,7 +21,6 @@ function buildConnection() {
     undefined,
     'certs/AmazonRootCA1.pem',
   );
-
   config_builder.with_clean_session(false);
   config_builder.with_client_id('clock-punching-server');
   config_builder.with_endpoint(
@@ -44,11 +43,14 @@ try {
 async function sendMessage({ message, topic }: MessageDTO) {
   return new Promise<void>(async (resolve, reject) => {
     try {
-      connection
-        .publish(topic, JSON.stringify(message), mqtt.QoS.AtLeastOnce)
-        .then(() => {
-          resolve();
-        });
+      function publish() {
+        connection
+          .publish(topic, JSON.stringify(message), mqtt.QoS.AtLeastOnce)
+          .then(() => {
+            resolve();
+          });
+      }
+      setTimeout(publish, 1000);
     } catch (error) {
       reject(error);
     }
