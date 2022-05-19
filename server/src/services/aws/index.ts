@@ -33,7 +33,13 @@ function buildConnection() {
   return client.new_connection(config);
 }
 
-const connection = buildConnection();
+let connection: mqtt.MqttClientConnection;
+
+try {
+  connection = buildConnection();
+} catch (e) {
+  console.log(e);
+}
 
 async function sendMessage({ message, topic }: MessageDTO) {
   return new Promise<void>(async (resolve, reject) => {
