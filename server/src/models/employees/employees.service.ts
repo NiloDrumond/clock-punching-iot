@@ -24,8 +24,6 @@ export class EmployeesService {
     const employee = this.employees[cpf];
     if (employee.atOffice) {
       const entered = employee.timestamps[employee.timestamps.length - 1];
-      console.log(new Date().getTime() - entered.getTime());
-      console.log(8 * 60 * 60 * 1000);
       if (
         new Date().getTime() - entered.getTime() + 1000 * 30 * 60 <
         8 * 60 * 60 * 1000
