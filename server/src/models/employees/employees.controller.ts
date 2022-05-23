@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CreateEmployeeDTO } from './dto/create-employee.dto';
 import { Employee } from './employees.interfaces';
 import { EmployeesService } from './employees.service';
@@ -7,6 +8,7 @@ import { EmployeesService } from './employees.service';
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createEmployeeDTO: CreateEmployeeDTO) {
     this.employeesService.create(createEmployeeDTO);
@@ -17,6 +19,7 @@ export class EmployeesController {
     this.employeesService.clockIn(cpf);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(): Employee[] {
     return this.employeesService.findAll();

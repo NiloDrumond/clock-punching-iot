@@ -15,7 +15,6 @@ const Home: NextPage = () => {
     config.EMPLOYEES_URL,
     async (url) => {
       const response = await api.get<Employee[]>({ url });
-      console.log(response);
       if (validateResponse(response)) {
         return response.body;
       }
@@ -23,8 +22,6 @@ const Home: NextPage = () => {
     },
     { refreshInterval: 5000, revalidateOnFocus: true }
   );
-
-  console.log(data);
 
   return (
     <Center h="100vh" bg="gray.50">

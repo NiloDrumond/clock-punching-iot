@@ -11,6 +11,7 @@ import {
   Button,
   Text,
   Link,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
@@ -18,7 +19,7 @@ import { useAuth } from "../hooks/Auth/useAuth";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { SubmitErrorHandler, useForm } from "react-hook-form";
 import { SignInData } from "../hooks/Auth/Auth.types";
 import React from "react";
 import { useRouter } from "next/router";
@@ -39,15 +40,23 @@ const Login: NextPage = () => {
     register,
     handleSubmit,
     setError,
+
     formState: { errors },
   } = useForm<SignInData>(formOptions);
 
   const onSubmit = React.useCallback(
-    (data: SignInData) => {
-      signIn(data);
+    async (data: SignInData) => {
+      const success = await signIn(data);
+      if (!success) {
+        setError("password", { message: "Falha ao autenticar" });
+      }
     },
-    [signIn]
+    [signIn, setError]
   );
+
+  // const onError: SubmitErrorHandler<SignInData> = React.useCallback(({password, username}) => {
+
+  // },[])
 
   React.useEffect(() => {
     if (token) {
@@ -75,13 +84,22 @@ const Login: NextPage = () => {
           p={8}
         >
           <Stack spacing={4}>
-            <FormControl id="email">
+            <FormControl isInvalid={!!errors.username} id="username">
               <FormLabel>Usuário</FormLabel>
-              <Input type="email" />
+              <Input {...register("username", { min: 3, required: true })} />
+              {errors.username && (
+                <FormErrorMessage>{errors.username.message}</FormErrorMessage>
+              )}
             </FormControl>
-            <FormControl id="password">
+            <FormControl isInvalid={!!errors.password} id="password">
               <FormLabel>Senha</FormLabel>
-              <Input type="password" />
+              <Input
+                {...register("password", { min: 3, required: true })}
+                type="password"
+              />
+              {errors.password && (
+                <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+              )}
             </FormControl>
             <Stack spacing={10}>
               <Stack
@@ -98,6 +116,7 @@ const Login: NextPage = () => {
                 _hover={{
                   bg: "blue.500",
                 }}
+                onClick={handleSubmit(onSubmit)}
               >
                 Sign in
               </Button>

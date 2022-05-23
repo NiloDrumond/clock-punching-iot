@@ -4,7 +4,7 @@ export type SignInData = {
 };
 
 export interface AuthContextData {
-  signIn: (data: SignInData) => void;
+  signIn: (data: SignInData) => Promise<boolean>;
   signOut: () => void;
   isLoading: boolean;
   token?: string;
